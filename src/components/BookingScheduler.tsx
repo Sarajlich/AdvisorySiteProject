@@ -244,13 +244,13 @@ export function BookingScheduler() {
           </div>
           <p className="mt-6 text-xs font-bold uppercase tracking-[0.22em] text-gold">Request received</p>
           <h3 className="mt-3 font-display text-4xl leading-tight text-navy">
-            Your consultation is pending confirmation.
+            Your consultation is confirmed.
           </h3>
           <p className="mt-5 text-base font-semibold leading-7 text-slate-700">
             {formatBookingDate(booking.booking_date)} at {booking.booking_time.slice(0, 5)} Europe/Sarajevo time.
           </p>
           <p className="mt-3 text-sm font-medium leading-6 text-slate-600">
-            The request has been stored securely. The advisor can review it in the booking dashboard and contact you using your account email.
+            Your time has been reserved securely. The advisor can review the booking in Supabase and contact you using your account email.
           </p>
           <button
             type="button"
@@ -366,7 +366,7 @@ export function BookingScheduler() {
         {submitting ? "Sending request..." : "Request consultation"}
       </button>
       <p className="mt-3 text-center text-xs font-semibold leading-5 text-slate-500">
-        Your time is reserved as pending until the advisor confirms it.
+        Your selected time is confirmed immediately after a successful request.
       </p>
     </form>
   );

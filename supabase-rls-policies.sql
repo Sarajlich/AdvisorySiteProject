@@ -18,7 +18,7 @@ create table if not exists public.bookings (
   booking_date date not null,
   booking_time time not null,
   notes text,
-  status text not null default 'pending',
+  status text not null default 'confirmed',
   created_at timestamptz not null default now()
 );
 
@@ -69,6 +69,9 @@ create index if not exists bookings_created_at_idx on public.bookings (created_a
 create unique index if not exists bookings_active_slot_unique
 on public.bookings (booking_date, booking_time)
 where status in ('pending', 'confirmed');
+
+alter table public.bookings
+alter column status set default 'confirmed';
 
 do $$
 begin

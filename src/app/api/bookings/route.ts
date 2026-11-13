@@ -106,7 +106,7 @@ export async function POST(request: Request) {
       booking_date: parsed.data.bookingDate,
       booking_time: parsed.data.bookingTime,
       notes: parsed.data.notes || null,
-      status: "pending"
+      status: "confirmed"
     })
     .select("id, booking_date, booking_time, status")
     .single();
