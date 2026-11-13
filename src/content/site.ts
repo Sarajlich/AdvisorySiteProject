@@ -78,9 +78,6 @@ export const siteConfig = {
   email: "hello@executive-advisory.example",
   phone: "+387 00 000 000",
   location: "Sarajevo, Bosnia and Herzegovina",
-  bookingUrl:
-    process.env.NEXT_PUBLIC_CALENDLY_URL ||
-    "https://calendly.com/your-handle/30min",
   seoKeywords: [
     "AI governance Balkans",
     "DORA consulting",

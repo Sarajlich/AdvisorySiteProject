@@ -13,7 +13,7 @@ The snapshot uses a fresh, audited history so personal contact details and contr
 - AI advisory assistant with a built-in knowledge base and offline fallback responses
 - Optional OpenAI Responses API integration through server-side environment variables
 - Optional Supabase authentication, user profiles, and booking persistence
-- Calendly integration configurable without hard-coded account details
+- Native consultation scheduling with Supabase-backed availability and booking requests
 - Reusable content, card, navigation, layout, and animation components
 - Schema-based validation with Zod and in-memory API rate limiting
 - Security headers for framing, content sniffing, referrers, permissions, and HTTPS
@@ -64,7 +64,6 @@ Copy `.env.example` to `.env.local`, then add only the services you want to enab
 ```env
 NEXT_PUBLIC_SUPABASE_URL=
 NEXT_PUBLIC_SUPABASE_PUBLISHABLE_KEY=
-NEXT_PUBLIC_CALENDLY_URL=
 OPENAI_API_KEY=
 OPENAI_MODEL=
 ```
@@ -73,7 +72,6 @@ OPENAI_MODEL=
 | --- | --- |
 | `NEXT_PUBLIC_SUPABASE_URL` | Supabase project URL for authentication and data |
 | `NEXT_PUBLIC_SUPABASE_PUBLISHABLE_KEY` | Public Supabase browser key; never use a service-role key here |
-| `NEXT_PUBLIC_CALENDLY_URL` | Scheduling page displayed in the booking experience |
 | `OPENAI_API_KEY` | Server-only key for live AI responses |
 | `OPENAI_MODEL` | Model used by the AI advisor route |
 

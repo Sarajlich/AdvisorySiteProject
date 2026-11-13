@@ -1,7 +1,45 @@
 import { NextResponse } from "next/server";
 import { createSupabaseServerClient } from "@/lib/supabase/server";
 import { enforceRateLimit } from "@/lib/security/rateLimit";
-import { bookingSchema, isPastDate } from "@/lib/validation";
+import { bookingSchema, dateInSarajevo, isBookingWeekday } from "@/lib/validation";
+
+export async function GET(request: Request) {
+  const limited = enforceRateLimit(request, "booking-availability", {
+    limit: 30,
+    windowMs: 60_000
+  });
+
+  if (limited) return limited;
+
+  const supabase = await createSupabaseServerClient();
+  const {
+    data: { user }
+  } = await supabase.auth.getUser();
+
+  if (!user) {
+    return NextResponse.json({ error: "Please log in to view availability." }, { status: 401 });
+  }
+
+  const startDate = dateInSarajevo();
+  const end = new Date();
+  end.setUTCDate(end.getUTCDate() + 90);
+  const endDate = dateInSarajevo(end);
+  const { data, error } = await supabase.rpc("get_unavailable_booking_slots", {
+    p_start_date: startDate,
+    p_end_date: endDate
+  });
+
+  if (error) {
+    return NextResponse.json({ error: "Could not load availability." }, { status: 500 });
+  }
+
+  const unavailable = (data || []).map((slot: { booking_date: string; booking_time: string }) => ({
+    bookingDate: slot.booking_date,
+    bookingTime: slot.booking_time.slice(0, 5)
+  }));
+
+  return NextResponse.json({ unavailable });
+}
 
 export async function POST(request: Request) {
   const limited = enforceRateLimit(request, "booking-create", {
@@ -20,8 +58,20 @@ export async function POST(request: Request) {
     return NextResponse.json({ error: "Please choose a valid date and time." }, { status: 400 });
   }
 
-  if (isPastDate(parsed.data.bookingDate)) {
-    return NextResponse.json({ error: "Please choose a future date." }, { status: 400 });
+  const today = dateInSarajevo();
+  const bookingLimit = new Date();
+  bookingLimit.setUTCDate(bookingLimit.getUTCDate() + 90);
+  const latestDate = dateInSarajevo(bookingLimit);
+
+  if (parsed.data.bookingDate <= today || parsed.data.bookingDate > latestDate) {
+    return NextResponse.json(
+      { error: "Please choose a date within the next 90 days." },
+      { status: 400 }
+    );
+  }
+
+  if (!isBookingWeekday(parsed.data.bookingDate)) {
+    return NextResponse.json({ error: "Consultations are available Monday through Friday." }, { status: 400 });
   }
 
   const supabase = await createSupabaseServerClient();
@@ -62,6 +112,13 @@ export async function POST(request: Request) {
     .single();
 
   if (error) {
+    if (error.code === "23505") {
+      return NextResponse.json(
+        { error: "That time was just reserved. Please choose another available time." },
+        { status: 409 }
+      );
+    }
+
     return NextResponse.json(
       { error: "Could not save your consultation request. Please try again." },
       { status: 500 }

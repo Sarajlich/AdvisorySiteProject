@@ -66,6 +66,9 @@ create index if not exists bookings_user_id_idx on public.bookings (user_id);
 create index if not exists bookings_booking_date_idx on public.bookings (booking_date);
 create index if not exists bookings_status_idx on public.bookings (status);
 create index if not exists bookings_created_at_idx on public.bookings (created_at);
+create unique index if not exists bookings_active_slot_unique
+on public.bookings (booking_date, booking_time)
+where status in ('pending', 'confirmed');
 
 do $$
 begin
@@ -81,3 +84,23 @@ begin
   end if;
 end
 $$;
+
+create or replace function public.get_unavailable_booking_slots(
+  p_start_date date,
+  p_end_date date
+)
+returns table (booking_date date, booking_time time)
+language sql
+stable
+security definer
+set search_path = public
+as $$
+  select bookings.booking_date, bookings.booking_time
+  from public.bookings
+  where bookings.status in ('pending', 'confirmed')
+    and bookings.booking_date between p_start_date and p_end_date
+  order by bookings.booking_date, bookings.booking_time;
+$$;
+
+revoke all on function public.get_unavailable_booking_slots(date, date) from public;
+grant execute on function public.get_unavailable_booking_slots(date, date) to authenticated;

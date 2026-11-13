@@ -30,12 +30,11 @@ export const profileEnsureSchema = z.object({
   email: z.string().trim().email().max(254).optional()
 });
 
+export const BOOKING_TIME_SLOTS = ["09:00", "10:00", "11:00", "13:00", "14:00", "15:00"] as const;
+
 export const bookingSchema = z.object({
   bookingDate: z.string().regex(/^\d{4}-\d{2}-\d{2}$/, "Select a valid date."),
-  bookingTime: z
-    .string()
-    .regex(/^\d{2}:\d{2}$/, "Select a valid time.")
-    .max(10),
+  bookingTime: z.enum(BOOKING_TIME_SLOTS, { message: "Select an available time." }),
   notes: z.string().trim().max(1000, "Notes must be 1000 characters or less.").optional()
 });
 
@@ -52,7 +51,16 @@ export const aiAdvisorRequestSchema = z.object({
     .optional()
 });
 
-export function isPastDate(dateValue: string) {
-  const today = new Date().toISOString().slice(0, 10);
-  return dateValue < today;
+export function dateInSarajevo(date = new Date()) {
+  return new Intl.DateTimeFormat("en-CA", {
+    year: "numeric",
+    month: "2-digit",
+    day: "2-digit",
+    timeZone: "Europe/Sarajevo"
+  }).format(date);
+}
+
+export function isBookingWeekday(dateValue: string) {
+  const day = new Date(`${dateValue}T12:00:00Z`).getUTCDay();
+  return day >= 1 && day <= 5;
 }

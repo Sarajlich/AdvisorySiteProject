@@ -1,5 +1,5 @@
 import Link from "next/link";
-import { CalendlyEmbed } from "@/components/CalendlyEmbed";
+import { BookingScheduler } from "@/components/BookingScheduler";
 import { Icon } from "@/components/Icon";
 import { Reveal } from "@/components/Reveal";
 
@@ -79,7 +79,7 @@ export function ConsultationCTA({ content, compact = false }: ConsultationCTAPro
             {compact ? (
               <CompactConsultationCard primary={primary} external={external} />
             ) : (
-              <CalendlyEmbed />
+              <BookingScheduler />
             )}
           </div>
         </div>
