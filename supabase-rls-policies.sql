@@ -97,10 +97,10 @@ set search_path = public
 as $$
   select bookings.booking_date, bookings.booking_time
   from public.bookings
-  where bookings.status in ('pending', 'confirmed')
+  where auth.uid() is not null
+    and bookings.status in ('pending', 'confirmed')
     and bookings.booking_date between p_start_date and p_end_date
   order by bookings.booking_date, bookings.booking_time;
 $$;
 
-revoke all on function public.get_unavailable_booking_slots(date, date) from public;
 grant execute on function public.get_unavailable_booking_slots(date, date) to authenticated;
