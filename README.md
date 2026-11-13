@@ -106,6 +106,7 @@ The dependency audit reports zero known production vulnerabilities at publicatio
 - The assistant uses local fallback responses until an OpenAI key and model are supplied.
 - Contact, scheduling, and canonical-domain values are placeholders and must be configured before a real deployment.
 
-## Attribution
+## Contributors
 
-This portfolio copy is intentionally transparent about its collaborative origin. See [`jasnaking-stack/advisorysite`](https://github.com/jasnaking-stack/advisorysite) for the original repository, contributors, and development history.
+- [@rijad-pleho](https://github.com/rijad-pleho)
+- [@pasovicc](https://github.com/pasovicc)
