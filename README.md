@@ -2,8 +2,6 @@
 
 A polished, full-stack advisory website for an executive consulting brand focused on AI governance, digital transformation, project leadership, IT governance, and professional education.
 
-![Advisory Site Project hero](public/images/hero-ai-boardroom.png)
-
 ## Portfolio context
 
 This repository is a privacy-reviewed portfolio snapshot of a collaborative project. I contributed to the original project; its [complete Git history](https://github.com/jasnaking-stack/advisorysite) preserves the full team attribution.
