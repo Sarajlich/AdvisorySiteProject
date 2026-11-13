@@ -4,8 +4,6 @@ A polished, full-stack advisory website for an executive consulting brand focuse
 
 ## Portfolio context
 
-This repository is a privacy-reviewed portfolio snapshot of a collaborative project. I contributed to the original project; its [complete Git history](https://github.com/jasnaking-stack/advisorysite) preserves the full team attribution.
-
 The snapshot uses a fresh, audited history so personal contact details and contributor email addresses from earlier commits are not republished. Public-facing contact, scheduling, and domain values are intentionally non-operational examples.
 
 ## Highlights
