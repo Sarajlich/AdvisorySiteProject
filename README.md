@@ -13,7 +13,7 @@ The snapshot uses a fresh, audited history so personal contact details and contr
 - AI advisory assistant with a built-in knowledge base and offline fallback responses
 - Optional OpenAI Responses API integration through server-side environment variables
 - Optional Supabase authentication, user profiles, and booking persistence
-- Native consultation scheduling with Supabase-backed availability and booking requests
+- Native consultation scheduling with Supabase-backed availability and automatically confirmed requests
 - Reusable content, card, navigation, layout, and animation components
 - Schema-based validation with Zod and in-memory API rate limiting
 - Security headers for framing, content sniffing, referrers, permissions, and HTTPS
@@ -77,6 +77,14 @@ OPENAI_MODEL=
 
 Do not commit `.env` files, private keys, service-role credentials, or production secrets.
 
+## Supabase booking setup
+
+The booking experience is native to the application and does not require Calendly or another scheduling subscription. It uses weekday time slots in Europe/Sarajevo time, prevents double-booking at the database level, and confirms successful requests immediately.
+
+For a new Supabase project, run [`supabase-rls-policies.sql`](supabase-rls-policies.sql) in the Supabase SQL editor after creating the project. The script creates the `profiles` and `bookings` tables, applies row-level security, adds the booking availability function, and configures the unique active-slot rule.
+
+Booking requests are stored in the `bookings` table with the selected date, time, account email, notes, and `confirmed` status.
+
 ## Available scripts
 
 ```bash
@@ -102,7 +110,8 @@ The dependency audit reports zero known production vulnerabilities at publicatio
 
 - Login and registration display demo mode until Supabase is configured.
 - The assistant uses local fallback responses until an OpenAI key and model are supplied.
-- Contact, scheduling, and canonical-domain values are placeholders and must be configured before a real deployment.
+- Contact and canonical-domain values are placeholders and must be configured before a real deployment.
+- Booking requests require an authenticated Supabase user and the database setup script above.
 
 ## Contributors
 
