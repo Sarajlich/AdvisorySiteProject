@@ -1,21 +1,45 @@
--- Manual Supabase setup reference.
--- Run this in the Supabase SQL editor after reviewing existing policies.
+-- AdvisorySiteProject database setup.
+-- Safe to run more than once in the Supabase SQL editor.
+
+create extension if not exists pgcrypto;
+
+create table if not exists public.profiles (
+  id uuid primary key references auth.users (id) on delete cascade,
+  full_name text,
+  email text,
+  created_at timestamptz not null default now()
+);
+
+create table if not exists public.bookings (
+  id uuid primary key default gen_random_uuid(),
+  user_id uuid not null references auth.users (id) on delete cascade,
+  full_name text not null,
+  email text not null,
+  booking_date date not null,
+  booking_time time not null,
+  notes text,
+  status text not null default 'pending',
+  created_at timestamptz not null default now()
+);
 
 alter table public.profiles enable row level security;
 alter table public.bookings enable row level security;
 
+drop policy if exists "Users can read own profile" on public.profiles;
 create policy "Users can read own profile"
 on public.profiles
 for select
 to authenticated
 using (id = auth.uid());
 
+drop policy if exists "Users can insert own profile" on public.profiles;
 create policy "Users can insert own profile"
 on public.profiles
 for insert
 to authenticated
 with check (id = auth.uid());
 
+drop policy if exists "Users can update own profile" on public.profiles;
 create policy "Users can update own profile"
 on public.profiles
 for update
@@ -23,12 +47,14 @@ to authenticated
 using (id = auth.uid())
 with check (id = auth.uid());
 
+drop policy if exists "Users can read own bookings" on public.bookings;
 create policy "Users can read own bookings"
 on public.bookings
 for select
 to authenticated
 using (user_id = auth.uid());
 
+drop policy if exists "Users can create own bookings" on public.bookings;
 create policy "Users can create own bookings"
 on public.bookings
 for insert
@@ -41,24 +67,17 @@ create index if not exists bookings_booking_date_idx on public.bookings (booking
 create index if not exists bookings_status_idx on public.bookings (status);
 create index if not exists bookings_created_at_idx on public.bookings (created_at);
 
-alter table public.bookings
-alter column status set default 'pending';
-
-alter table public.profiles
-alter column created_at set default now();
-
-alter table public.bookings
-alter column created_at set default now();
-
 do $$
 begin
   if not exists (
     select 1
     from pg_constraint
-    where conname = 'bookings_status_allowed'
+    where conrelid = 'public.bookings'::regclass
+      and conname = 'bookings_status_allowed'
   ) then
     alter table public.bookings
-    add constraint bookings_status_allowed
-    check (status in ('pending', 'confirmed', 'cancelled'));
+      add constraint bookings_status_allowed
+      check (status in ('pending', 'confirmed', 'cancelled'));
   end if;
-end $$;
+end
+$$;
