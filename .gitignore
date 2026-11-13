@@ -1,0 +1,15 @@
+node_modules
+.next
+out
+publish
+Website-PM.docx
+.env
+.env.*
+!.env.example
+.vercel
+*.log
+*.pem
+*.key
+*.p12
+*.pfx
+tsconfig.tsbuildinfo
