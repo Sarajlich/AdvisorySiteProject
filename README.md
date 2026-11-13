@@ -2,6 +2,12 @@
 
 A polished, full-stack advisory website for an executive consulting brand focused on AI governance, digital transformation, project leadership, IT governance, and professional education.
 
+**Live demo:** [advisory-site-project.netlify.app](https://advisory-site-project.netlify.app/)
+
+## What I built
+
+This project demonstrates how I designed and implemented a complete advisory experience—from public marketing pages and an AI-assisted consultation flow to authenticated profiles and persistent booking data. The application is intentionally safe to run as a portfolio demo: external services are optional, and the site falls back gracefully when production credentials are not present.
+
 ## Portfolio context
 
 The snapshot uses a fresh, audited history so personal contact details and contributor email addresses from earlier commits are not republished. Public-facing contact, scheduling, and domain values are intentionally non-operational examples.
